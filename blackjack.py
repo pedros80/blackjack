@@ -96,16 +96,19 @@ class BlackJack(Frame):
 		self.dealer = Hand()
 		self.grid()
 		self.createWidgets()
+		self.yourHand = "Your Hand:\n {} \nscore {}"
+		self.dealerHand = "Dealer's Hand:\n {} \nscore {}"
+		self.dealerHandInitial = "Dealer's Hand:\n {} [    ]\n "
 
 	def twist(self):
 		self.player.twist(self.deck)
 		if self.player.getScore() > 21:
 			self.bust()
 		else:
-			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
+			self.playerLabel.config(text=self.yourHand)
 
 	def bust(self):
-		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
+		self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.winnerLabel.config(text="You are BUST")
@@ -119,23 +122,23 @@ class BlackJack(Frame):
  			self.twistButton.config(state="normal")
 			self.stickButton.config(state="normal")
 			self.dealButton.config(state="disabled")
-			self.dealerLabel.config(text="Dealer's Hand:\n {} [    ]\n ".format(str(self.dealer.cards[0])))
-			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
+			self.dealerLabel.config(text=self.dealerHandInitial.format(str(self.dealer.cards[0])))
+			self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
 			self.winnerLabel.config(text="")
 		else:
 			self.winnerLabel.config(text="You are broke, get out of here")
 			self.dealButton.config(state="disabled")
 
 	def stick(self):
-		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
-		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
+		self.dealerLabel.config(text=self.dealerHand.format(str(self.dealer), self.dealer.getScore()))
+		self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.dealButton.config(state="normal")
 		while self.dealer.getScore() < 17:
 			self.dealer.twist(self.deck)
 
-		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
+		self.dealerLabel.config(text=self.dealerHand.format(str(self.dealer), self.dealer.getScore()))
 
 		score = self.player.getScore()
 		against = self.dealer.getScore()
