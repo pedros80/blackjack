@@ -2,17 +2,22 @@
 
 from Tkinter import *
 import random
+import itertools
 
 class Card:
+
+	SUITS = ["Hearts", "Clubs", "Diamonds", "Spades"]
+   	RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+
 	def __init__(self, rank, suit):
 		self.suit = suit
 		self.rank = rank
 
    	def __str__(self):
-   		return "[ %s %s ]" % (self.rank, self.suit[0])
+   		return "[ {} {} ]".format(self.rank, self.suit[0])
 
    	def __repr__(self):
-   		return "[ %s of %s ]" % (self.rank, self.suit)
+   		return "[ {} of {} ]".format(self.rank, self.suit)
 
    	def __cmp__(self, other):
    		return self.rank - other.rank
@@ -22,12 +27,9 @@ class Deck:
 	"""class containing 52 cards and methods to manipulate them
 	"""
 
-	SUITS = ["Hearts", "Clubs", "Diamonds", "Spades"]
-   	RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-
    	def __init__(self):
 		""" initialise deck object. makes 52 Cards from suits and ranks"""
-		self.cards = [Card(rank, suit) for suit in Deck.SUITS for rank in Deck.RANKS]
+		self.cards = [Card(rank, suit) for rank, suit in itertools.product(Card.RANKS, Card.SUITS)]
 		random.shuffle(self.cards)
 
 	def drawOne(self):
@@ -76,7 +78,7 @@ class Hand:
 				total = total + 10
 
 		# if ace makes you bust, count as one
-		if total > 21 and acecount >0:
+		if total > 21 and acecount > 0:
 			total -= acecount * 10
 
 		return total
@@ -100,15 +102,15 @@ class BlackJack(Frame):
 		if self.player.getScore() > 21:
 			self.bust()
 		else:
-			self.playerLabel.config(text="Your Hand:\n %s \nscore %d" % (str(self.player), self.player.getScore()))
+			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 
 	def bust(self):
-		self.playerLabel.config(text="Your Hand:\n %s \nscore %d" % (str(self.player), self.player.getScore()))
+		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.winnerLabel.config(text="You are BUST")
 		self.player.cash-=10
-		self.cashLabel.config(text="You have %d bar on you gadge "%self.player.cash)
+		self.cashLabel.config(text="You have {} bar on you gadge ".format(self.player.cash))
 		self.dealButton.config(state="normal")
 
 	def deal(self):
@@ -117,23 +119,23 @@ class BlackJack(Frame):
  			self.twistButton.config(state="normal")
 			self.stickButton.config(state="normal")
 			self.dealButton.config(state="disabled")
-			self.dealerLabel.config(text="Dealer's Hand:\n %s [    ]\n "%str(self.dealer.cards[0]))
-			self.playerLabel.config(text="Your Hand:\n %s \nscore %d" % (str(self.player), self.player.getScore()))
+			self.dealerLabel.config(text="Dealer's Hand:\n {} [    ]\n ".format(str(self.dealer.cards[0])))
+			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 			self.winnerLabel.config(text="")
 		else:
 			self.winnerLabel.config(text="You are broke, get out of here")
 			self.dealButton.config(state="disabled")
 
 	def stick(self):
-		self.dealerLabel.config(text="Dealer's Hand:\n %s \nscore %d" % (str(self.dealer), self.dealer.getScore()))
-		self.playerLabel.config(text="Your Hand:\n %s \nscore %d" % (str(self.player), self.player.getScore()))
+		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
+		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.dealButton.config(state="normal")
 		while self.dealer.getScore() < 17:
 			self.dealer.twist(self.deck)
 
-		self.dealerLabel.config(text="Dealer's Hand:\n %s \nscore %d" % (str(self.dealer), self.dealer.getScore()))
+		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
 
 		score = self.player.getScore()
 		against = self.dealer.getScore()
@@ -155,7 +157,7 @@ class BlackJack(Frame):
 		else:
 			self.player.cash += 10
 			self.winnerLabel.config(text="You Win!!!")
-		self.cashLabel.config(text="You have %d bar on you gadge "%self.player.cash)
+		self.cashLabel.config(text="You have {} bar on you gadge ".format(self.player.cash))
 
 	def createWidgets(self):
 		myfont=("Helvetica", "16")
@@ -165,7 +167,7 @@ class BlackJack(Frame):
 		self.stickButton = Button(self, text="stick", command=self.stick, state="disabled", font=myfont, width=4, bd=4)
 		self.dealerLabel = Label(self, text="pedros casino\n\n", bg="green", font=myfont)
 		self.playerLabel = Label(self, text="blackjack\n\n", bg="green", font=myfont)
-		self.cashLabel = Label(self, text="You have %d bar on you gadge "%self.player.cash, bg="green", font=myfont)
+		self.cashLabel = Label(self, text="You have {} bar on you gadge ".format(self.player.cash), bg="green", font=myfont)
 		self.winnerLabel = Label(self, text="", bg="green", font=myfont)
 		self.dealerLabel.grid(sticky=E+W)
 		self.playerLabel.grid(sticky=E+W)
