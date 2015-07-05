@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 
-from Tkinter import *
+import Tkinter as TK
 import random
 import itertools
 
@@ -87,28 +87,25 @@ class Hand:
 		return " ".join(str(card) for card in self.cards)
 
 
-class BlackJack(Frame):
+class BlackJack(TK.Frame):
 
 	def __init__(self, master=None):
-		Frame.__init__(self, master, bg="green", width=300)
+		TK.Frame.__init__(self, master, bg="green", width=300)
 		self.deck = Deck()
 		self.player = Hand()
 		self.dealer = Hand()
 		self.grid()
 		self.createWidgets()
-		self.yourHand = "Your Hand:\n {} \nscore {}"
-		self.dealerHand = "Dealer's Hand:\n {} \nscore {}"
-		self.dealerHandInitial = "Dealer's Hand:\n {} [    ]\n "
 
 	def twist(self):
 		self.player.twist(self.deck)
 		if self.player.getScore() > 21:
 			self.bust()
 		else:
-			self.playerLabel.config(text=self.yourHand)
+			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 
 	def bust(self):
-		self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
+		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.winnerLabel.config(text="You are BUST")
@@ -122,23 +119,23 @@ class BlackJack(Frame):
  			self.twistButton.config(state="normal")
 			self.stickButton.config(state="normal")
 			self.dealButton.config(state="disabled")
-			self.dealerLabel.config(text=self.dealerHandInitial.format(str(self.dealer.cards[0])))
-			self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
+			self.dealerLabel.config(text="Dealer's Hand:\n {} [    ]\n ".format(str(self.dealer.cards[0])))
+			self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 			self.winnerLabel.config(text="")
 		else:
 			self.winnerLabel.config(text="You are broke, get out of here")
 			self.dealButton.config(state="disabled")
 
 	def stick(self):
-		self.dealerLabel.config(text=self.dealerHand.format(str(self.dealer), self.dealer.getScore()))
-		self.playerLabel.config(text=self.yourHand.format(str(self.player), self.player.getScore()))
+		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
+		self.playerLabel.config(text="Your Hand:\n {} \nscore {}".format(str(self.player), self.player.getScore()))
 		self.twistButton.config(state="disabled")
 		self.stickButton.config(state="disabled")
 		self.dealButton.config(state="normal")
 		while self.dealer.getScore() < 17:
 			self.dealer.twist(self.deck)
 
-		self.dealerLabel.config(text=self.dealerHand.format(str(self.dealer), self.dealer.getScore()))
+		self.dealerLabel.config(text="Dealer's Hand:\n {} \nscore {}".format(str(self.dealer), self.dealer.getScore()))
 
 		score = self.player.getScore()
 		against = self.dealer.getScore()
@@ -164,22 +161,22 @@ class BlackJack(Frame):
 
 	def createWidgets(self):
 		myfont=("Helvetica", "16")
-		self.quitButton = Button ( self, text="Quit", command=self.quit, font=myfont, fg="red", width=4, bd=4)
-		self.twistButton = Button(self, text="twist", command=self.twist, state="disabled", font=myfont, width=4, bd=4)
-		self.dealButton = Button(self, text="deal", command=self.deal, font=myfont, width=4, bd=4)
-		self.stickButton = Button(self, text="stick", command=self.stick, state="disabled", font=myfont, width=4, bd=4)
-		self.dealerLabel = Label(self, text="pedros casino\n\n", bg="green", font=myfont)
-		self.playerLabel = Label(self, text="blackjack\n\n", bg="green", font=myfont)
-		self.cashLabel = Label(self, text="You have {} bar on you gadge ".format(self.player.cash), bg="green", font=myfont)
-		self.winnerLabel = Label(self, text="", bg="green", font=myfont)
-		self.dealerLabel.grid(sticky=E+W)
-		self.playerLabel.grid(sticky=E+W)
-		self.cashLabel.grid(sticky=E+W, padx=8, pady=8)
-		self.twistButton.grid(row=3, sticky=E, padx=8, pady=8, ipadx=8, ipady=8)
-		self.stickButton.grid(row=3, sticky=W, padx=8, pady=8, ipadx=8, ipady=8)
-		self.dealButton.grid(row=4, sticky=W, padx=8, pady=8, ipadx=8, ipady=8)
-		self.quitButton.grid(row=4, sticky=E, padx=8, pady=8, ipadx=8, ipady=8)
-		self.winnerLabel.grid(row=5, sticky=E+W)
+		self.quitButton = TK.Button ( self, text="Quit", command=self.quit, font=myfont, fg="red", width=4, bd=4)
+		self.twistButton = TK.Button(self, text="twist", command=self.twist, state="disabled", font=myfont, width=4, bd=4)
+		self.dealButton = TK.Button(self, text="deal", command=self.deal, font=myfont, width=4, bd=4)
+		self.stickButton = TK.Button(self, text="stick", command=self.stick, state="disabled", font=myfont, width=4, bd=4)
+		self.dealerLabel = TK.Label(self, text="pedros casino\n\n", bg="green", font=myfont)
+		self.playerLabel = TK.Label(self, text="blackjack\n\n", bg="green", font=myfont)
+		self.cashLabel = TK.Label(self, text="You have {} bar on you gadge ".format(self.player.cash), bg="green", font=myfont)
+		self.winnerLabel = TK.Label(self, text="", bg="green", font=myfont)
+		self.dealerLabel.grid(sticky=TK.E+TK.W)
+		self.playerLabel.grid(sticky=TK.E+TK.W)
+		self.cashLabel.grid(sticky=TK.E+TK.W, padx=8, pady=8)
+		self.twistButton.grid(row=3, sticky=TK.E, padx=8, pady=8, ipadx=8, ipady=8)
+		self.stickButton.grid(row=3, sticky=TK.W, padx=8, pady=8, ipadx=8, ipady=8)
+		self.dealButton.grid(row=4, sticky=TK.W, padx=8, pady=8, ipadx=8, ipady=8)
+		self.quitButton.grid(row=4, sticky=TK.E, padx=8, pady=8, ipadx=8, ipady=8)
+		self.winnerLabel.grid(row=5, sticky=TK.E+TK.W)
 
 if __name__=="__main__":
 
